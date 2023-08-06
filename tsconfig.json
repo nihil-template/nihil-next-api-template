@@ -1,0 +1,76 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "@emotion/react",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/store/*": [
+        "./src/store/*"
+      ],
+      "@/styles/*": [
+        "./src/styles/*"
+      ],
+      "@/images/*": [
+        "./src/images/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/reducers/*": [
+        "./src/reducers/*"
+      ],
+      "@/utils/*": [
+        "./src/utils/*"
+      ],
+      "@/pages/*": [
+        "src/pages/*"
+      ],
+      "@/data/*": [
+        "./src/data/*"
+      ],
+      "@/layouts/*": [
+        "./src/layouts/*"
+      ],
+      "@/actions/*": [
+        "./src/actions/*"
+      ],
+      "@/types/*": [
+        "./src/types/*"
+      ],
+      "@/server/*": [
+        "./src/types/*"
+      ]
+    },
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ESNext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true
+  },
+  "include": [
+    "**/*.d.ts",
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}

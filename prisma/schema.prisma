@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  active
+  inactive
+  withdrawal
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  userName   String       @unique
+  email      String       @unique
+  status     UserStatus   @default(active)
+  role       UserRole     @default(user)
+  created    DateTime     @default(now())
+  updated    DateTime     @updatedAt
+  auth       UserAuth[]
+  Withdrawal Withdrawal[]
+
+  @@map("user")
+}
+
+model UserAuth {
+  id             Int     @id @default(autoincrement())
+  userId         Int     @unique
+  hashedPassword String
+  refreshToken   String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "user_auth_user_id_fk")
+  @@map("user_auth")
+}
+
+model Withdrawal {
+  id      Int      @id @default(autoincrement())
+  userId  Int      @unique
+  text    String?
+  created DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "withdrawal_user_id_fk")
+  @@map("withdrawal")
+}
