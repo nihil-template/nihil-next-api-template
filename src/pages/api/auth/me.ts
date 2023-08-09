@@ -22,24 +22,24 @@ export default async function handler(
 
       if (!user) {
         const resData: IResError = {
-          status: 401,
+          statusCode: 401,
           message: '인증되지 않은 사용자입니다.',
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       } else {
         return res.status(200).json(user);
       }
     }
     default: {
       res.setHeader('Allowed', [ 'GET', ]);
-      const data: IResError = {
-        status: 405,
+      const resData: IResError = {
+        statusCode: 405,
         message: [
           `[ ${method} ] 요청이 허용되지 않았습니다.`,
         ],
       };
-      return res.status(405).json(data);
+      return res.status(resData.statusCode).json(resData);
     }
   }
 }

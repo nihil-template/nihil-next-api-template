@@ -4,10 +4,10 @@ import { IQueryParameter, IQueryType } from '@/types/queries.types';
 import { apiGet } from '@/utils/axios';
 import { IResError } from '@/types/api.types';
 
-export const useGetByAny = <T>(input: IQueryParameter<T>): IQueryType<T> => {
+export const useGetByAny = <T, E = IResError>(input: IQueryParameter<T>): IQueryType<T, E> => {
   const {
     data = [], isLoading, isError, error, isSuccess, refetch,
-  } = useQuery<T, AxiosError<IResError>>(
+  } = useQuery<T, AxiosError<E>>(
     input.key,
     async () => {
       const { data, } = await apiGet<T>(input.api, input.config);

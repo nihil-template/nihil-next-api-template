@@ -4,10 +4,10 @@ import { IMutationParameter, IMutationType } from '@/types/queries.types';
 import { apiPatch } from '@/utils/axios';
 import { IResError } from '@/types/api.types';
 
-export const usePatch = <T, P>(input: IMutationParameter): IMutationType<T, P> => {
+export const usePatch = <T, P, E = IResError>(input: IMutationParameter): IMutationType<T, P, E> => {
   const {
     mutate, isLoading, isError, error, isSuccess,
-  } = useMutation<T, AxiosError<IResError>, P>(
+  } = useMutation<T, AxiosError<E>, P>(
     async (updateData) => {
       const { data, } = await apiPatch<T, P>(
         input.api,

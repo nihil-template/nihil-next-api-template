@@ -1,24 +1,19 @@
 import { User } from '@prisma/client';
 
 export interface IResError {
-  status: number;
   message: string | string[];
+  error?: string;
+  statusCode: number;
 }
 
-export interface IRes<Type> {
-  status: number;
-  message: string;
-  body: Type;
-}
-
-export interface IRefresh {
+export interface ITokens {
   accessToken: string;
   accessExp: number;
   refreshToken?: string;
   refreshExp?: number;
 }
 
-export interface iSignInRes {
+export interface IUserWithTokens {
   user: User;
-  tokens: IRefresh;
+  tokens: ITokens;
 }

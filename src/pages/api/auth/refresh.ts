@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { IRefresh, IRes, IResError } from '@/types/api.types';
+import { ITokens, IResError } from '@/types/api.types';
 import { prisma } from '@/utils/prisma';
 import { createToken, verifyToken } from '@/utils/jwt';
 import { getUserByToken } from '@/utils/api';
@@ -24,11 +24,11 @@ export default async function handler(
 
       if (!user) {
         const resData: IResError = {
-          status: 401,
+          statusCode: 401,
           message: '인증되지 않은 사용자입니다.',
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       const userAuth = await prisma.userAuth.findUnique({
@@ -39,11 +39,11 @@ export default async function handler(
 
       if (userAuth.refreshToken !== refreshToken) {
         const resData: IResError = {
-          status: 401,
+          statusCode: 401,
           message: '인증 정보가 일치하지 않습니다.',
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       const refreshInfo = verifyToken(refreshToken, process.env.REFRESH_SECRET);
@@ -54,11 +54,11 @@ export default async function handler(
 
       if (diff <= 0) {
         const resData: IResError = {
-          status: 401,
+          statusCode: 401,
           message: '리프레시 토큰이 만료되었습니다.',
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       const accessToken = createToken(
@@ -90,28 +90,27 @@ export default async function handler(
         process.env.REFRESH_SECRET
       );
 
-      const resData: IRes<IRefresh> = {
-        status: 200,
-        message: '액세스토큰이 재발급 되었습니다.',
-        body: {
-          accessToken,
-          accessExp: tokenInfo.exp,
-          refreshToken: newRefreshToken,
-          refreshExp: newRefreshInfo.exp,
-        },
+      const tokens: ITokens = {
+        accessToken,
+        accessExp: tokenInfo.exp,
+        refreshToken: newRefreshToken,
+        refreshExp: newRefreshInfo.exp,
       };
 
-      return res.status(resData.status).json(resData);
+      return res.status(200).json({
+        user,
+        tokens,
+      });
     }
     default: {
       res.setHeader('Allowed', [ 'POST', ]);
-      const data: IResError = {
-        status: 405,
+      const resData: IResError = {
+        statusCode: 405,
         message: [
           `[ ${method} ] 요청이 허용되지 않았습니다.`,
         ],
       };
-      return res.status(405).json(data);
+      return res.status(resData.statusCode).json(resData);
     }
   }
 }

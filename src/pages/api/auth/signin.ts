@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import {
-  IRefresh, IRes, IResError, iSignInRes
-} from '@/types/api.types';
+import { ITokens, IResError } from '@/types/api.types';
 import { ISignInDto } from '@/types/dto.types';
 import { prisma } from '@/utils/prisma';
 import { compareData } from '@/utils/bcrypt';
@@ -29,11 +27,11 @@ export default async function handler(
 
       if (!user) {
         const resData: IResError = {
-          status: 401,
+          statusCode: 401,
           message: '존재하지 않는 사용자 계정입니다.',
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       const userAuth = await prisma.userAuth.findUnique({
@@ -46,11 +44,11 @@ export default async function handler(
 
       if (!passwordValid) {
         const resData: IResError = {
-          status: 401,
+          statusCode: 401,
           message: '비밀번호가 일치하지 않습니다.',
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       const accessToken = createToken(
@@ -79,7 +77,7 @@ export default async function handler(
 
       const refreshInfo = verifyToken(refreshToken, process.env.REFRESH_SECRET);
 
-      const tokens: IRefresh = {
+      const tokens: ITokens = {
         accessToken,
         accessExp: tokenInfo.exp,
         refreshToken,
@@ -100,23 +98,17 @@ export default async function handler(
         tokens,
       };
 
-      const resData: IRes<iSignInRes> = {
-        status: 200,
-        message: '로그인 되었습니다.',
-        body: userWithToken,
-      };
-
-      return res.status(resData.status).json(resData);
+      return res.status(200).json(userWithToken);
     }
     default: {
       res.setHeader('Allowed', [ 'POST', ]);
-      const data: IResError = {
-        status: 405,
+      const resData: IResError = {
+        statusCode: 405,
         message: [
           `[ ${method} ] 요청이 허용되지 않았습니다.`,
         ],
       };
-      return res.status(405).json(data);
+      return res.status(resData.statusCode).json(resData);
     }
   }
 }

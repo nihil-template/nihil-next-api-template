@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { User } from '@prisma/client';
-import { IRes, IResError } from '@/types/api.types';
+import { IResError } from '@/types/api.types';
 import { ISignUpDto } from '@/types/dto.types';
 import { prisma } from '@/utils/prisma';
 import { hashData } from '@/utils/bcrypt';
@@ -33,36 +32,36 @@ export default async function handler(
 
       if (emailCheck && userNameCheck) {
         const resData: IResError = {
-          status: 400,
+          statusCode: 400,
           message: [
             '이미 사용중인 이메일 입니다.',
             '이미 사용중인 별명입니다.',
           ],
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       if (emailCheck) {
         const resData: IResError = {
-          status: 400,
+          statusCode: 400,
           message: [
             '이미 사용중인 이메일 입니다.',
           ],
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       if (userNameCheck) {
         const resData: IResError = {
-          status: 400,
+          statusCode: 400,
           message: [
             '이미 사용중인 별명입니다.',
           ],
         };
 
-        return res.status(resData.status).json(resData);
+        return res.status(resData.statusCode).json(resData);
       }
 
       const hashedPassword = await hashData(password);
@@ -82,24 +81,18 @@ export default async function handler(
         },
       });
 
-      const resData: IRes<User> = {
-        status: 201,
-        message: '회원가입이 완료되었습니다.',
-        body: user,
-      };
-
-      return res.status(resData.status).json(resData);
+      return res.status(201).json(user);
     }
 
     default: {
       res.setHeader('Allowed', [ 'POST', ]);
-      const data: IResError = {
-        status: 405,
+      const resData: IResError = {
+        statusCode: 405,
         message: [
           `[ ${method} ] 요청이 허용되지 않았습니다.`,
         ],
       };
-      return res.status(405).json(data);
+      return res.status(resData.statusCode).json(resData);
     }
   }
 }

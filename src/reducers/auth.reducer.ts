@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { iSignInRes } from '@/types/api.types';
+import { IUserWithTokens } from '@/types/api.types';
 
 interface IAuth {
-  userInfo: iSignInRes;
+  userInfo: IUserWithTokens;
 }
 
 const initialState: IAuth = {
@@ -15,7 +15,7 @@ const authReducer = createSlice({
   reducers: {
     setUserInfo(
       state,
-      { payload, }: PayloadAction<{ userInfo: iSignInRes }>
+      { payload, }: PayloadAction<{ userInfo: IUserWithTokens }>
     ) {
       state.userInfo = payload.userInfo;
     },

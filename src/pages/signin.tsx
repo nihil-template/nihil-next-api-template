@@ -17,19 +17,24 @@ export default function SignInPage() {
   const dispatch = useAppDispatch();
 
   const {
-    register, handleSubmit, formState: { errors, },
-  } = useForm<Inputs>({ mode: 'onChange', });
+    register,
+    handleSubmit,
+    formState: { errors, },
+  } = useForm<Inputs>({
+    mode: 'onChange',
+  });
 
   const signIn = useSignIn();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmitForm: SubmitHandler<Inputs> = (data) => {
     signIn.mutate({
       ...data,
     }, {
-      onSuccess(result) {
+      onSuccess(response) {
         dispatch(setUserInfo({
-          userInfo: result.body,
+          userInfo: response,
         }));
+
         router.push('/');
       },
     });
@@ -39,34 +44,40 @@ export default function SignInPage() {
     default: css([
       tw`  `,
     ]),
+    input: css([
+      tw` border border-black-200 block m-1 w-[250px] `,
+    ]),
+    button: css([
+      tw` block border border-blue-500 bg-blue-500 text-white m-1 text-center w-[250px] `,
+    ]),
   };
 
   return (
     <>
       <AppLayout title='로그인'>
         <div css={style.default}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmitForm)}>
             <input
               type='email'
-              placeholder='이메일'
               {...register('email', {
+                pattern: /([a-zA-Z0-9_])@([a-z].[a-z])/,
                 required: true,
-                pattern: /(\S+)@(\S+.\S+)/,
               })}
+              css={style.input}
             />
-            {errors.email && <p>이메일 형식이 아닙니다.</p>}
+            {errors.email && (<p>이메일을 올바르게 입력해주세요.</p>)}
             <input
               type='password'
-              placeholder='비밀번호 (8~20자)'
               autoComplete='off'
               {...register('password', {
                 required: true,
                 minLength: 8,
                 maxLength: 20,
               })}
+              css={style.input}
             />
-            {errors.password && <p>비밀번호는 8~20자의 숫자, 영어 알파벳의 조합입니다.</p>}
-            <button>로그인</button>
+            {errors.password && (<p>비밀번호는 8~20자입니다.</p>)}
+            <button css={style.button}>로그인</button>
           </form>
         </div>
       </AppLayout>

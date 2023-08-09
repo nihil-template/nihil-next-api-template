@@ -4,10 +4,10 @@ import { IMutationParameter, IMutationType } from '@/types/queries.types';
 import { apiPost } from '@/utils/axios';
 import { IResError } from '@/types/api.types';
 
-export const usePost = <T, P>(input: IMutationParameter): IMutationType<T, P> => {
+export const usePost = <T, P, E = IResError>(input: IMutationParameter): IMutationType<T, P, E> => {
   const {
     mutate, isLoading, isError, error, isSuccess,
-  } = useMutation<T, AxiosError<IResError>, P>(
+  } = useMutation<T, AxiosError<E>, P>(
     async (postData) => {
       const { data, } = await apiPost<T, P>(
         input.api,
