@@ -2,11 +2,10 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 import {
   QueryObserverResult, RefetchOptions, RefetchQueryFilters, UseMutateFunction, UseQueryOptions
 } from '@tanstack/react-query';
-import { IResError } from './api.types';
 
-export interface IQueryType<T> {
+export interface IQueryType<T, E> {
   data: T;
-  error?: AxiosError<IResError>;
+  error?: AxiosError<E>;
   isLoading?: boolean;
   isError?: boolean;
   isFetching?: boolean;
@@ -15,9 +14,9 @@ export interface IQueryType<T> {
   refetch?: <TPageData>(options?: RefetchOptions & RefetchQueryFilters<TPageData>) => Promise<QueryObserverResult<T, AxiosError<unknown, any>>>
 }
 
-export interface IMutationType<T, P> {
-  mutate: UseMutateFunction<T, AxiosError, P, unknown>;
-  error?: AxiosError<IResError>;
+export interface IMutationType<T, P, E> {
+  mutate: UseMutateFunction<T, AxiosError<E>, P, unknown>;
+  error?: AxiosError<E>;
   isLoading?: boolean;
   isError?: boolean;
   isSuccess?: boolean;

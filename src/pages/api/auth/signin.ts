@@ -22,6 +22,9 @@ export default async function handler(
       const user = await prisma.user.findUnique({
         where: {
           email,
+          NOT: {
+            status: 'withdrawal',
+          },
         },
       });
 

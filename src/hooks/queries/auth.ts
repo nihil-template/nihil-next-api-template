@@ -16,20 +16,18 @@ export const useSignIn = () => usePost<IUserWithTokens, ISignInDto>({
   api: '/auth/signin',
 });
 
-export const useSignOut = (id: number, token: string, isClick: boolean) => useGetAny<void>({
-  key: queryKeys.auth.signOut(id),
-  api: '/auth/signout',
-  options: {
-    enabled: !!isClick,
-  },
-  config: {
-    headers: {
-      Authorization: `Bearer ${token}`,
+export const useSignOut = (token: string) => (
+  usePost<{message: string}, null>({
+    api: '/auth/signout',
+    config: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  },
-});
+  })
+);
 
-export const useGetMe = (token: string) => useGetAny<User>({
+export const useMe = (token: string) => useGetAny<User>({
   key: queryKeys.auth.me,
   api: '/auth/me',
   config: {
@@ -51,15 +49,13 @@ export const useRefresh = (refreshToken: string) => usePost<IUserWithTokens, nul
   },
 });
 
-export const useWithdrawal = (id: number, token: string, isClick: boolean) => useGetAny<void>({
-  key: queryKeys.auth.withdrawal(id),
-  api: '/auth/withdrawal',
-  options: {
-    enabled: !!isClick,
-  },
-  config: {
-    headers: {
-      Authorization: `Bearer ${token}`,
+export const useWithdrawal = (token: string) => (
+  usePost<void, null>({
+    api: '/auth/withdrawal',
+    config: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  },
-});
+  })
+);

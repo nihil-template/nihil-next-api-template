@@ -6,7 +6,7 @@ import { AppLayout } from '@/layouts';
 import { dateFormat } from '@/utils/date';
 import { useSession } from '@/hooks';
 
-export default function MyInfoPage() {
+export default function MyPage() {
   const session = useSession();
   const router = useRouter();
 

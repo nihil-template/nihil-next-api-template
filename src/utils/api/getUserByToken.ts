@@ -11,6 +11,9 @@ export const getUserByToken = async (token: string) => {
   const user = await prisma.user.findUnique({
     where: {
       id: tokenInfo.sub,
+      NOT: {
+        status: 'withdrawal',
+      },
     },
   });
 

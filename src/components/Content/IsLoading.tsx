@@ -7,9 +7,6 @@ export function IsLoading() {
   const isLoading = useIsFetching();
   const isMutating = useIsMutating();
 
-  console.log(isLoading);
-  console.log(isMutating);
-
   const style = {
     default: css([
       tw` text-[4rem] absolute z-[2] w-screen h-screen flex items-center justify-center bg-white `,

@@ -21,12 +21,18 @@ export default async function handler(
       const emailCheck = await prisma.user.findUnique({
         where: {
           email,
+          NOT: {
+            status: 'withdrawal',
+          },
         },
       });
 
       const userNameCheck = await prisma.user.findUnique({
         where: {
           userName,
+          NOT: {
+            status: 'withdrawal',
+          },
         },
       });
 

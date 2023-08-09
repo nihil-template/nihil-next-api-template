@@ -11,35 +11,44 @@ import { IAppLayoutProps, IMetaData } from '@/types/site.types';
 import { IsLoading } from '@/components/Content';
 import { useSession } from '@/hooks';
 import { useRefresh } from '@/hooks/queries/auth';
+import { useAppDispatch } from '@/hooks/rtk';
+import { resetUserInfo } from '@/reducers/auth.reducer';
 
 export function AppLayout({
   children, title, description, keywords, author, image, created, updated, tags, type, section,
 }: IAppLayoutProps) {
-  const { asPath, } = useRouter();
+  const router = useRouter();
 
   const qc = useQueryClient();
   const session = useSession();
+  const dispatch = useAppDispatch();
 
   const refresh = useRefresh(session?.tokens.refreshToken);
 
   useEffect(() => {
     console.log('refresh >> ', refresh);
 
-    const diff = Math.round(((session.tokens.accessExp * 1000) - Date.now()) / 1000);
+    const accessExp = session?.tokens.accessExp;
+    const diff = Math.round(((accessExp * 1000) - Date.now()) / 1000);
+
+    if (diff < 0) {
+      dispatch(resetUserInfo());
+      router.push('/');
+    }
 
     if (diff <= 150) {
       refresh.mutate(null, {
         onSuccess(result) {
-          session.tokens = result.body;
+          session.tokens = result.tokens;
           qc.invalidateQueries();
         },
       });
     }
-  }, [ asPath, ]);
+  }, [ router.asPath, ]);
 
   const meta: IMetaData = {
     title,
-    url: asPath,
+    url: router.asPath,
     description,
     keywords,
     author,

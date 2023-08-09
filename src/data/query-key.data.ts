@@ -1,8 +1,8 @@
 const auth = {
   me: [ 'getMe', ],
-  signOut: (id: number) => [ 'signOut', id, ],
+  signOut: [ 'signOut', ],
   refresh: [ 'refreshTokens', ],
-  withdrawal: (id: number) => [ 'withdrawal', id, ],
+  withdrawal: [ 'withdrawal', ],
 };
 
 const users = {

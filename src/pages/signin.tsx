@@ -59,24 +59,31 @@ export default function SignInPage() {
           <form onSubmit={handleSubmit(onSubmitForm)}>
             <input
               type='email'
+              placeholder='이메일'
               {...register('email', {
-                pattern: /([a-zA-Z0-9_])@([a-z].[a-z])/,
-                required: true,
+                required: '이메일을 입력하세요.',
+                pattern: {
+                  value: /([a-zA-Z0-9_])@([a-z].[a-z])/,
+                  message: '올바른 이메일 형식을 입력해주세요.',
+                },
               })}
               css={style.input}
             />
-            {errors.email && (<p>이메일을 올바르게 입력해주세요.</p>)}
+            {errors.email && (<p>{errors.email.message}</p>)}
             <input
               type='password'
               autoComplete='off'
+              placeholder='비밀번호'
               {...register('password', {
-                required: true,
-                minLength: 8,
-                maxLength: 20,
+                required: '비밀번호는 필수로 입력해야합니다.',
+                pattern: {
+                  value: /^(?=.*\d)(?=.*[a-zA-Z]).{8,20}$/,
+                  message: '비밀번호는 8~20 자리의 숫자+영어알파벳(대/소)으로 구성되어야합니다.',
+                },
               })}
               css={style.input}
             />
-            {errors.password && (<p>비밀번호는 8~20자입니다.</p>)}
+            {errors.password && (<p>{errors.password.message}</p>)}
             <button css={style.button}>로그인</button>
           </form>
         </div>
