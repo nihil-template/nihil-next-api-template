@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
-import { IMetaData } from '@/types/site.types';
-import { siteData } from '@/data/config.data';
+import { IMetaData } from '@/src/types/site.types';
+import { siteData } from '@/src/data/config.data';
 
 interface IMetaProps {
   meta: IMetaData;

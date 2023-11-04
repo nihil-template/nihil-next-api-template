@@ -1,50 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Global } from '@emotion/react';
 import { useRouter } from 'next/router';
 import tw, { css } from 'twin.macro';
 import { ToastContainer } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   Footer, Header, Main, Meta
-} from '@/components/Layout';
-import { IAppLayoutProps, IMetaData } from '@/types/site.types';
-import { IsLoading } from '@/components/Content';
-import { useSession } from '@/hooks';
-import { useRefresh } from '@/hooks/queries/auth';
-import { useAppDispatch } from '@/hooks/rtk';
-import { resetUserInfo } from '@/reducers/auth.reducer';
+} from '@/src/components/Layout';
+import { IAppLayoutProps, IMetaData } from '@/src/types/site.types';
 
 export function AppLayout({
   children, title, description, keywords, author, image, created, updated, tags, type, section,
 }: IAppLayoutProps) {
   const router = useRouter();
-
-  const qc = useQueryClient();
-  const session = useSession();
-  const dispatch = useAppDispatch();
-
-  const refresh = useRefresh(session?.tokens.refreshToken);
-
-  useEffect(() => {
-    console.log('refresh >> ', refresh);
-
-    const accessExp = session?.tokens.accessExp;
-    const diff = Math.round(((accessExp * 1000) - Date.now()) / 1000);
-
-    if (diff < 0) {
-      dispatch(resetUserInfo());
-      router.push('/');
-    }
-
-    if (diff <= 150) {
-      refresh.mutate(null, {
-        onSuccess(result) {
-          session.tokens = result.tokens;
-          qc.invalidateQueries();
-        },
-      });
-    }
-  }, [ router.asPath, ]);
 
   const meta: IMetaData = {
     title,
@@ -74,13 +41,12 @@ export function AppLayout({
       <Meta meta={meta} />
 
       <Header />
-      <IsLoading />
       <Main>{children}</Main>
       <Footer />
       <ToastContainer
         position='top-right'
         theme='colored'
-        autoClose={5000}
+        autoClose={4000}
         pauseOnFocusLoss={false}
       />
     </>

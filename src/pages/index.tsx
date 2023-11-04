@@ -1,32 +1,24 @@
 import React, { useCallback } from 'react';
 import tw, { css } from 'twin.macro';
-import { AppLayout } from '@/layouts';
-import { changeWord } from '@/reducers/word.reducer';
-import { useAppDispatch, useAppSelector } from '@/hooks/rtk';
-import { useSession } from '@/hooks';
+import { AppLayout } from '@/src/layouts';
+import { useAppDispatch, useAppSelector } from '@/src/hooks/rtk';
+import { setWord } from '../reducers/example.reducer';
 
 export default function IndexPage() {
-  const text = useAppSelector((state) => state.word.text);
+  const word = useAppSelector((state) => state.example.word);
   const dispatch = useAppDispatch();
-
-  const session = useSession();
-
-  console.log('accessToken >> ', session?.tokens.accessToken);
-  console.log('accessExp >> ', session?.tokens.accessExp);
 
   const onClickText = useCallback(
     () => {
-      dispatch(changeWord());
+      dispatch(setWord(word === 'JavaScript' ? 'TypeScript' : 'JavaScript'));
     },
-    []
+    [ word, ]
   );
 
   const style = {
     default: css([
       tw` py-4 `,
-    ]),
-    word: css([
-      tw` p-3 bg-black-700 text-white font-900 text-center text-[2rem] `,
+      tw` [>h2]:( p-3 bg-black-700 text-white font-900 text-center text-[2rem] ) `,
     ]),
     button: css([
       tw` block w-full p-3 bg-blue-500 text-white text-[1.2rem] mt-5 transition-all duration-200 `,
@@ -38,7 +30,7 @@ export default function IndexPage() {
     <>
       <AppLayout title='홈'>
         <div css={style.default}>
-          <h2 css={style.word}>{text}</h2>
+          <h2>{word}</h2>
           <button onClick={onClickText} css={style.button}>클릭</button>
         </div>
       </AppLayout>

@@ -2,7 +2,6 @@ import React from 'react';
 import tw, { TwStyle, css } from 'twin.macro';
 import { SerializedStyles } from '@emotion/react';
 import { Nav } from './Nav';
-import { UserNav } from './UserNav';
 
 interface Props {
   styles?: TwStyle | SerializedStyles;
@@ -19,10 +18,7 @@ export function Header({ styles, }: Props) {
   return (
     <>
       <header css={style.default}>
-        <div>
-          <Nav />
-          <UserNav />
-        </div>
+        <Nav />
       </header>
     </>
   );

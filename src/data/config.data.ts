@@ -1,4 +1,4 @@
-import { ISiteData } from '@/types/site.types';
+import { ISiteData } from '@/src/types/site.types';
 
 export const siteData: ISiteData = {
   title: '사이트 이름',
